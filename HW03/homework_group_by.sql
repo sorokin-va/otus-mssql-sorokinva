@@ -138,18 +138,20 @@ select
 from (select distinct
 			 datepart(YEAR, E.FinalizationDate)   as 'Год продажи'
 			,datepart(MONTH, E.FinalizationDate)  as 'Месяц продажи'
-			,X.StockItemID                        as 'Наименование товара'
-			,left(E.FinalizationDate,7) as r
+			,X.StockItemID                        as 'ID товара'
+			,X.StockItemName                      as 'Наименование товара'
 			from Sales.CustomerTransactions as E
-				cross apply (select StockItemID from Warehouse.StockItems) X
+				cross apply (select StockItemID, StockItemName from Warehouse.StockItems) X
 			where E.FinalizationDate is not null) BASE
 left join (select
 				 datepart(YEAR, SCT.FinalizationDate)   as 'Год продажи'
 				,datepart(MONTH, SCT.FinalizationDate)  as 'Месяц продажи'
-				,WSI.StockItemID                      as 'Наименование товара'
+				,WSI.StockItemID                        as 'ID товара'
+				,WSI.StockItemName                      as 'Наименование товара'
 				,sum (SCT.TransactionAmount)            as 'Сумма продаж'
 				,min (SCT.FinalizationDate)             as 'Дата первой продажи'
-				,count (SIL.StockItemID)                as 'Количество проданного'
+				,case when count (SIL.StockItemID) < 50 then count (SIL.StockItemID)
+				else 999999999 end as 'Количество проданного'
 			from Sales.InvoiceLines as SIL
 				join Sales.CustomerTransactions as SCT on SIL.InvoiceID = SCT.InvoiceID
 				join Warehouse.StockItems as WSI on SIL.StockItemID = WSI.StockItemID
@@ -158,5 +160,7 @@ left join (select
 				 datepart(YEAR, SCT.FinalizationDate)
 				,datepart(MONTH, SCT.FinalizationDate)
 				,WSI.StockItemID
-			having count (SIL.StockItemID) < 50) DETAIL on BASE.[Месяц продажи] = DETAIL.[Месяц продажи] and BASE.[Год продажи] = DETAIL.[Год продажи] and BASE.[Наименование товара] = DETAIL.[Наименование товара]
+				,WSI.StockItemName
+			) DETAIL on BASE.[Месяц продажи] = DETAIL.[Месяц продажи] and BASE.[Год продажи] = DETAIL.[Год продажи] and BASE.[ID товара] = DETAIL.[ID товара]
+where DETAIL.[Количество проданного] is null or DETAIL.[Количество проданного] <> 999999999
 order by 1,2,3
