@@ -25,8 +25,8 @@ USE WideWorldImporters
 */
 
 select
- StockItemID    as 'ид. товара'
-,StockItemName  as 'наименование товара'
+	 StockItemID    as 'ид. товара'
+	,StockItemName  as 'наименование товара'
 from Warehouse.StockItems
 where StockItemName like '%urgent%' or StockItemName like 'Animal%'
 
@@ -39,8 +39,8 @@ where StockItemName like '%urgent%' or StockItemName like 'Animal%'
 */
 
 select
- PS.SupplierID     as 'ид. поставщика'
-,PS.SupplierName   as 'название поставщика'
+	 PS.SupplierID     as 'ид. поставщика'
+	,PS.SupplierName   as 'название поставщика'
 from Purchasing.Suppliers as PS
 	left join Purchasing.PurchaseOrders as PPO on PS.SupplierID = PPO.SupplierID
 where PPO.SupplierID is null
@@ -63,16 +63,16 @@ where PPO.SupplierID is null
 */
 
 select 
- SO.OrderID                                             as 'ид. заказа'
-,convert(varchar, SO.OrderDate, 104)                    as 'дата заказа'
-,datename(M, SO.OrderDate)                              as 'название месяца'
-,datepart(Q, SO.OrderDate)                              as 'номер квартала'
-,case
-	when datepart(M, SO.OrderDate) in (1,2,3,4) then 1
-	when datepart(M, SO.OrderDate) in (5,6,7,8) then 2
-	else 3
-	end                                                 as 'треть года'
-,SC.CustomerName                                        as 'имя заказчика'
+	 SO.OrderID                                             as 'ид. заказа'
+	,convert(varchar, SO.OrderDate, 104)                    as 'дата заказа'
+	,datename(M, SO.OrderDate)                              as 'название месяца'
+	,datepart(Q, SO.OrderDate)                              as 'номер квартала'
+	,case
+		when datepart(M, SO.OrderDate) in (1,2,3,4) then 1
+		when datepart(M, SO.OrderDate) in (5,6,7,8) then 2
+		else 3
+		end                                                 as 'треть года'
+	,SC.CustomerName                                        as 'имя заказчика'
 from sales.Orders as SO
 	join sales.OrderLines SOL on SO.OrderID = SOL.OrderID
 	left join sales.Customers SC on SO.CustomerID = SC.CustomerID
@@ -91,16 +91,16 @@ order by
 --пропустив первую 1000 и отобразив следующие 100 записей.
 
 select 
- SO.OrderID                                             as 'ид. заказа'
-,convert(varchar, SO.OrderDate, 104)                    as 'дата заказа'
-,datename(M, SO.OrderDate)                              as 'название месяца'
-,datepart(Q, SO.OrderDate)                              as 'номер квартала'
-,case
-	when datepart(M, SO.OrderDate) in (1,2,3,4) then 1
-	when datepart(M, SO.OrderDate) in (5,6,7,8) then 2
-	else 3
-	end                                                 as 'треть года'
-,SC.CustomerName                                        as 'имя заказчика'
+	 SO.OrderID                                             as 'ид. заказа'
+	,convert(varchar, SO.OrderDate, 104)                    as 'дата заказа'
+	,datename(M, SO.OrderDate)                              as 'название месяца'
+	,datepart(Q, SO.OrderDate)                              as 'номер квартала'
+	,case
+		when datepart(M, SO.OrderDate) in (1,2,3,4) then 1
+		when datepart(M, SO.OrderDate) in (5,6,7,8) then 2
+		else 3
+		end                                                 as 'треть года'
+	,SC.CustomerName                                        as 'имя заказчика'
 from sales.Orders as SO
 	join sales.OrderLines SOL on SO.OrderID = SOL.OrderID
 	left join sales.Customers SC on SO.CustomerID = SC.CustomerID
@@ -129,10 +129,10 @@ order by
 Таблицы: Purchasing.Suppliers, Purchasing.PurchaseOrders, Application.DeliveryMethods, Application.People.
 */
 select
- AD.DeliveryMethodName      as 'способ доставки'
-,PPO.ExpectedDeliveryDate   as 'дата доставки'
-,PS.SupplierName            as 'имя поставщика'
-,AP.FullName                as 'имя контактного лица, принимавшего заказ'
+	 AD.DeliveryMethodName      as 'способ доставки'
+	,PPO.ExpectedDeliveryDate   as 'дата доставки'
+	,PS.SupplierName            as 'имя поставщика'
+	,AP.FullName                as 'имя контактного лица, принимавшего заказ'
 from Purchasing.Suppliers as PS
 	join Purchasing.PurchaseOrders     as PPO on PS.SupplierID = PPO.SupplierID
 	join Application.DeliveryMethods   as AD on PPO.DeliveryMethodID = AD.DeliveryMethodID
@@ -155,9 +155,9 @@ select * from sales.Invoices
 */
 
 select distinct
- WST.CustomerID
-,SC.CustomerName
-,SC.PhoneNumber 
+	 WST.CustomerID
+	,SC.CustomerName
+	,SC.PhoneNumber 
 from Warehouse.StockItemTransactions as WST
 	join Warehouse.StockItems as WS on WST.StockItemID = WS.StockItemID
 	join sales.Customers as SC on WST.CustomerID = SC.CustomerID
