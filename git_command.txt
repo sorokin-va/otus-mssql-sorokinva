@@ -1,0 +1,15 @@
+git config --list Посмотреть user.name=sorokin-va   и   user.email=joker.sva@gmail.com
+git config --global user.email joker.sva@gmail.com
+
+git remote add origin <url>
+git branch -M main   - Переименование ветки в main
+Добавить аксесс токен
+находясь в локальной ветке связать локальный репозиторий с удаленным репозитории
+git push -u origin main
+должен запросить логин и ТОКЕН
+
+git status - текущее состояние
+после изменения/создания файлов на компе локально выполняем
+git add . - проиндексировать все измененные/созданные файлы перед коммита
+git commit -m "new update"  - коммит файлов с комментарием
+git push
