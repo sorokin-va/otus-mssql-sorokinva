@@ -146,7 +146,13 @@ where PPO.ExpectedDeliveryDate like '2013-01%'
 который оформил заказ (SalespersonPerson).
 Сделать без подзапросов.
 */
-select * from sales.Invoices
+select top 10 SC.CustomerName, AP.FullName, SI.*
+from sales.Invoices as SI
+join Sales.Customers as SC on SI.CustomerID = SC.CustomerID
+join Application.People as AP on SI.SalespersonPersonID = AP.PersonID
+order by InvoiceDate desc, InvoiceID desc
+
+
 
 /*
 6. Все ид и имена клиентов и их контактные телефоны,
