@@ -168,4 +168,4 @@ from Warehouse.StockItemTransactions as WST
 	join Warehouse.StockItems as WS on WST.StockItemID = WS.StockItemID
 	join sales.Customers as SC on WST.CustomerID = SC.CustomerID
 where WS.StockItemName like 'Chocolate frogs 250g'
-	and WST.CustomerID is not null
+	--and WST.CustomerID is not null               -- условие излишнее, т.к. join по этому полю и NULL автоматом отсекается
