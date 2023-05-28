@@ -79,13 +79,9 @@ from sales.Orders as SO
 where (SOL.UnitPrice > 100 or SOL.Quantity > 20)
 	and SOL.PickingCompletedWhen is not null
 order by 
-	datepart(Q, SO.OrderDate),
-	case
-		when datepart(M, SO.OrderDate) in (1,2,3,4) then 1
-		when datepart(M, SO.OrderDate) in (5,6,7,8) then 2
-		else 3
-	end,
-	convert(varchar, SO.OrderDate, 104)
+	[номер квартала],
+	[треть года],
+	[дата заказа]
 
 --Добавьте вариант этого запроса с постраничной выборкой,
 --пропустив первую 1000 и отобразив следующие 100 записей.
@@ -107,13 +103,9 @@ from sales.Orders as SO
 where (SOL.UnitPrice > 100 or SOL.Quantity > 20)
 	and SOL.PickingCompletedWhen is not null
 order by 
-	datepart(Q, SO.OrderDate),
-	case
-		when datepart(M, SO.OrderDate) in (1,2,3,4) then 1
-		when datepart(M, SO.OrderDate) in (5,6,7,8) then 2
-		else 3
-	end,
-	convert(varchar, SO.OrderDate, 104)
+	[номер квартала],
+	[треть года],
+	[дата заказа]
 	offset 1000 rows fetch first 100 rows only
 
 /*
