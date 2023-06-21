@@ -96,7 +96,15 @@ order by [id продажи]
 в каждом месяце за 2016 год (по 2 самых популярных продукта в каждом месяце).
 */
 
-напишите здесь свое решение
+select YEAR_MONTH, StockItemID, TOTAL from (
+	select *, ROW_NUMBER() OVER (PARTITION BY YEAR_MONTH ORDER BY TOTAL desc) as ID_ROW from (
+		select distinct left(SI.InvoiceDate,7) as YEAR_MONTH, SIL.StockItemID, sum(Quantity) OVER (PARTITION BY month(SI.InvoiceDate), SIL.StockItemID) as TOTAL from Sales.Invoices as SI
+			join Sales.InvoiceLines as SIL on SIL.InvoiceID = SI.InvoiceID
+		where SI.InvoiceDate like '2016%'
+	) t1
+) t2
+where ID_ROW <= 2
+order by YEAR_MONTH, TOTAL
 
 /*
 4. Функции одним запросом
