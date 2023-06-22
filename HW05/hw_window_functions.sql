@@ -89,14 +89,22 @@ order by [id продажи]
  --SQL Server Execution Times:
  --  CPU time = 453 ms,  elapsed time = 1099 ms.
 
- Вывод: оконная функция рулит)) в 5 раз быстрее чем с СТЕ
+-- Вывод: оконная функция рулит)) в 5 раз быстрее чем с СТЕ
 
 /*
 3. Вывести список 2х самых популярных продуктов (по количеству проданных) 
 в каждом месяце за 2016 год (по 2 самых популярных продукта в каждом месяце).
 */
 
-напишите здесь свое решение
+select YEAR_MONTH, StockItemID, TOTAL from (
+	select *, ROW_NUMBER() OVER (PARTITION BY YEAR_MONTH ORDER BY TOTAL desc) as ID_ROW from (
+		select distinct left(SI.InvoiceDate,7) as YEAR_MONTH, SIL.StockItemID, sum(Quantity) OVER (PARTITION BY month(SI.InvoiceDate), SIL.StockItemID) as TOTAL from Sales.Invoices as SI
+			join Sales.InvoiceLines as SIL on SIL.InvoiceID = SI.InvoiceID
+		where SI.InvoiceDate like '2016%'
+	) t1
+) t2
+where ID_ROW <= 2
+order by YEAR_MONTH, TOTAL
 
 /*
 4. Функции одним запросом
@@ -111,8 +119,37 @@ order by [id продажи]
 
 Для этой задачи НЕ нужно писать аналог без аналитических функций.
 */
+-- пронумеруйте записи по названию товара, так чтобы при изменении буквы алфавита нумерация начиналась заново
+select StockItemID, StockItemName, Brand, UnitPrice, ROW_NUMBER () OVER (PARTITION BY left(StockItemName,1) order by StockItemName) as 'нумерация' from Warehouse.StockItems
+--!!!не совсем понятно условие "при изменении буквы алфавита нумерация начиналась заново"
 
-напишите здесь свое решение
+
+-- посчитайте общее количество товаров и выведете полем в этом же запросе
+select StockItemID, StockItemName, Brand, UnitPrice, ROW_NUMBER () OVER (PARTITION BY left(StockItemName,1) order by StockItemName), sum (QuantityPerOuter) over () as 'общее количество товаров' from Warehouse.StockItems
+
+
+-- посчитайте общее количество товаров в зависимости от первой буквы названия товара
+select StockItemID, StockItemName, Brand, UnitPrice, ROW_NUMBER () OVER (PARTITION BY left(StockItemName,1) order by StockItemName), sum (QuantityPerOuter) over () as 'общее количество товаров', sum (QuantityPerOuter) over (PARTITION BY left(StockItemName,1) order by left(StockItemName,1)) as 'общее количество товаров по первой букве' from Warehouse.StockItems
+
+
+-- отобразите следующий id товара исходя из того, что порядок отображения товаров по имени
+select StockItemID, StockItemName, Brand, UnitPrice, lead(StockItemID) OVER (order by StockItemName) as 'следующий ID' from Warehouse.StockItems
+
+
+-- предыдущий ид товара с тем же порядком отображения (по имени)
+select StockItemID, StockItemName, Brand, UnitPrice, lag(StockItemID) OVER (order by StockItemName) as 'предыдыщий ID' from Warehouse.StockItems
+
+
+-- названия товара 2 строки назад, в случае если предыдущей строки нет нужно вывести "No items"
+select StockItemID, StockItemName, Brand, UnitPrice, isnull(lag(StockItemName,2) OVER (order by StockItemName),'No items') as 'Предыдущее название две строки назад'
+from Warehouse.StockItems
+
+
+-- сформируйте 30 групп товаров по полю вес товара на 1 шт
+select StockItemID, StockItemName, Brand, UnitPrice, TypicalWeightPerUnit, ntile(30) OVER (PARTITION BY TypicalWeightPerUnit order by TypicalWeightPerUnit) as 'Группа товаров по весу'
+from Warehouse.StockItems
+order by ntile(30) OVER (PARTITION BY TypicalWeightPerUnit order by TypicalWeightPerUnit)
+-- !! также не совсем понятно условие "по полю вес товара на 1 шт"
 
 /*
 5. По каждому сотруднику выведите последнего клиента, которому сотрудник что-то продал.
@@ -123,7 +160,7 @@ order by [id продажи]
 
 /*
 6. Выберите по каждому клиенту два самых дорогих товара, которые он покупал.
-В результатах должно быть ид клиета, его название, ид товара, цена, дата покупки.
+В результатах должно быть ид клиента, его название, ид товара, цена, дата покупки.
 */
 
 напишите здесь свое решение
