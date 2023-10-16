@@ -1,15 +1,20 @@
+drop database if exists SVA
+
 --создание БД
 create database SVA;
-on primary
 GO
 
 --создание схемы для справочников
-use SVA
-create schema dic
+use SVA;
+GO
+
+create schema dic;
+GO
+
 
 
 -- справочник типов лимитов
-drop table dic.limit
+drop table if exists dic.limit
 create table dic.limit(
 	Limit_type 	int not null,
 	Limit_name	varchar(50),
@@ -17,7 +22,7 @@ create table dic.limit(
 	Date_from	date not null,
 	Date_to		date not null)
 
-select * from dic.limit
+--select * from dic.limit
 
 ALTER TABLE dic.limit
 ADD CONSTRAINT chk_ndays CHECK (ndays > 0)
@@ -39,13 +44,14 @@ insert into dic.limit values
 
 
 --справочник типов отсутствий 
+drop table if exists dic.vacation
 create table dic.vacation(
 	Vacation_type 	int not null,
 	Vacation_name	varchar(50),
 	Date_from	date not null default '2020-01-01',
 	Date_to		date not null default '9999-12-31')
 
-select * from dic.VACATION
+--select * from dic.VACATION
 
 ALTER TABLE dic.VACATION
 ADD CONSTRAINT chk_date CHECK (Date_from <= Date_to)
@@ -56,7 +62,7 @@ insert into dic.VACATION (Vacation_type, Vacation_name) values
 (100, 'Ежегодный основной отпуск'),
 (200, 'Ежегодный дополнительный отпуск')
 
-
+GO
 
 
 -- создание функций для использования в constraint'ах
@@ -83,7 +89,7 @@ END;
 go
 
 --настроечная таблица соответствия типа лимита и типа отпуска, который может использовать данный тип лимита
-drop table DIC.VAC_LIM
+drop table if exists DIC.VAC_LIM
 create table dic.vac_lim(
 	Limit_type		int not null CONSTRAINT limit_type check (dbo.get_limit_type(limit_type) is not null),
 	Vacation_type 	int not null CONSTRAINT vacation_type check (dbo.get_vac_type(vacation_type) is not null),
@@ -99,11 +105,11 @@ insert into dic.VAC_LIM (Limit_type, Vacation_type) values
 (12, 200),
 (13, 200)
 
-select * from dic.VAC_LIM
+--select * from dic.VAC_LIM
 
 
 --справочник условий для трудового договора 
-drop table DIC.CONDITIONS
+drop table if exists DIC.CONDITIONS
 create table dic.conditions (
 	Condition_type	int not null primary key,
 	Condition_name 	varchar(100) not null,
@@ -125,13 +131,13 @@ insert into dic.CONDITIONS (Condition_type, Condition_name, Main_limit_type, Add
 (11, 'Отпуск 31+4', 3, 12),
 (12, 'Отпуск 31+5', 3, 13)
 
-select * from dic.CONDITIONS
+-- select * from dic.CONDITIONS
 
 
 
 -- для основных таблиц  с данными отдельную схему не создаю, использую dbo по умолчанию
 -- основная таблица с персональными данными о сотруднике
-drop table dbo.personal
+drop table if exists dbo.personal
 create table dbo.personal (
 	TN				int not null identity(1, 1),
 	Surname		 	varchar(100) not null,
@@ -146,7 +152,6 @@ create table dbo.personal (
 ALTER TABLE dbo.personal
 ADD CONSTRAINT chk_date_p CHECK (Date_from <= Date_to)
 
-select * from dbo.personal
 insert into dbo.personal (Surname, FisrtName, MiddleName, Gender, Date_of_birth) values 
 ('Иванов1', 'Иван1', 'Иванович1', 'м', '1980-03-13'),
 ('Иванов2', 'Иван2', 'Иванович2', 'м', '1980-03-14'),
@@ -171,7 +176,7 @@ insert into dbo.personal (Surname, FisrtName, MiddleName, Gender, Date_of_birth)
 
 
 --таблица с трудовыми договорами сотрудников
-drop table dbo.agreement
+drop table if exists dbo.agreement
 create table dbo.agreement (
 	TN				int not null,
 	Date_from		date not null default '2020-01-01',
@@ -188,8 +193,7 @@ CREATE NONCLUSTERED INDEX tn_ct_index_noclst
     ON SVA.dbo.agreement (TN, Condition_type);  
 GO
 
-select * from dbo.agreement
-insert into dbo.agreement (tn, Salary, Conditions) values 
+insert into dbo.agreement (TN, Salary, Condition_type) values 
 (1, 50000, 1),
 (2, 55000, 1),
 (3, 55000, 3),
@@ -213,7 +217,7 @@ insert into dbo.agreement (tn, Salary, Conditions) values
 
 
 --таблица с отсутствиями сотрудников
-drop table dbo.vacation
+drop table if exists dbo.vacation
 create table dbo.vacation (
 	TN				int not null,
 	Vacation_type	int not null,-- foreign key (vacation_type) references dic.vacation(Vacation_type),
@@ -221,21 +225,20 @@ create table dbo.vacation (
 	Date_to			date not null,
 	Ndays			as (datediff(DD, Date_from, Date_to)+1) persisted,
 	Primary key (TN, Date_to)	)
-go
+
 ALTER TABLE dbo.vacation
 ADD CONSTRAINT chk_date_vac CHECK (dbo.get_vac_type(vacation_type) is not null)
 
-select * from dbo.vacation
 insert into dbo.vacation (tn, Vacation_type, Date_from, Date_to) values 
 (1, 100, '2023-03-01', '2023-03-14' ),
 (1, 100, '2023-04-01', '2023-04-14' ),
 (1, 200, '2023-04-15', '2023-04-18' ),
-(1, 100, '2023-03-01', '2023-03-01' ),
-(1, 100, '2023-03-01', '2023-03-01' )
+(2, 100, '2023-03-01', '2023-03-21' ),
+(3, 100, '2023-03-01', '2023-03-14' )
 
 
 --таблица с составом бригад
-drop table dbo.workgroup
+drop table  if exists dbo.workgroup
 create table dbo.workgroup(
 	Id_group 	int not null,
 	Group_name	varchar(50),
@@ -256,11 +259,8 @@ ALTER TABLE dbo.workgroup
 ADD DEFAULT '2020-01-01' FOR Date_from
 
 CREATE NONCLUSTERED INDEX tn_index_noclst
-    ON SVA.dbo.workgroup (TN);  
-GO
-
-select * from dbo.workgroup
-
+    ON SVA.dbo.workgroup (TN)
+	
 insert into dbo.workgroup (Id_group, Group_name, TN)values
 (1, 'Бригада №1', 1),
 (1, 'Бригада №1', 4),
