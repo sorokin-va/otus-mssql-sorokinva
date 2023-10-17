@@ -57,6 +57,10 @@ ALTER TABLE dic.VACATION
 ADD CONSTRAINT chk_date CHECK (Date_from <= Date_to)
 ALTER TABLE dic.VACATION
 ADD PRIMARY KEY (Vacation_type, date_to)
+-- Создаем индекс, так как в отчет планируется подтягивать название отсутствия, отобрав его по типу и датам.
+-- При этом создаются новые отсутствия или меняются их названия давольно редко, поэтому создание индекса обосновано и не требует больших затрат на администрирование
+CREATE NONCLUSTERED INDEX tn_ct_index_noclst_include
+    ON SVA.dic.vacation (Vacation_type, Date_from, Date_to) include (Vacation_name);
 
 insert into dic.VACATION (Vacation_type, Vacation_name) values
 (100, 'Ежегодный основной отпуск'),
@@ -151,6 +155,14 @@ create table dbo.personal (
 
 ALTER TABLE dbo.personal
 ADD CONSTRAINT chk_date_p CHECK (Date_from <= Date_to)
+-- Создаем индекс, так как в отчет планируется подтягивать ФИО, отобрав его по ТН и датам.
+-- При этом есть сомнение в том, что будет использоваться индекс, т.к. TN имеет упорядоченные значения, но на практике люди меняют фамилии, либо мигрируются работники из других систем со своими диапазонами для ТН и сортировка нарушается.
+CREATE NONCLUSTERED INDEX pers_index_noclst_include
+    ON SVA.dbo.personal (TN, Date_from, Date_to) include (Surname, FisrtName, MiddleName); 
+-- Создаем индекс, так как в планируется формировать список именников, отобрав их по датам рождения.
+-- Список формируется ежедневно, и при большом штате сотрудников использование индекса актуально.
+CREATE NONCLUSTERED INDEX birthday_index_noclst_include
+    ON SVA.dbo.personal (Date_of_birth) include (Surname, FisrtName, MiddleName); 
 
 insert into dbo.personal (Surname, FisrtName, MiddleName, Gender, Date_of_birth) values 
 ('Иванов1', 'Иван1', 'Иванович1', 'м', '1980-03-13'),
