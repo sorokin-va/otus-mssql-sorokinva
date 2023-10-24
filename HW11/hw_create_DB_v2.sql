@@ -240,6 +240,8 @@ create table dbo.vacation (
 
 ALTER TABLE dbo.vacation
 ADD CONSTRAINT chk_date_vac CHECK (dbo.get_vac_type(vacation_type) is not null)
+ALTER TABLE dbo.vacation
+ADD CONSTRAINT chk_TN_vac CHECK (dbo.get_TN(TN) is not null)
 
 insert into dbo.vacation (tn, Vacation_type, Date_from, Date_to) values 
 (1, 100, '2023-03-01', '2023-03-14' ),
