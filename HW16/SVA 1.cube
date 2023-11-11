@@ -1,0 +1,146 @@
+﻿<Cube xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ddl2="http://schemas.microsoft.com/analysisservices/2003/engine/2" xmlns:ddl2_2="http://schemas.microsoft.com/analysisservices/2003/engine/2/2" xmlns:ddl100_100="http://schemas.microsoft.com/analysisservices/2008/engine/100/100" xmlns:ddl200="http://schemas.microsoft.com/analysisservices/2010/engine/200" xmlns:ddl200_200="http://schemas.microsoft.com/analysisservices/2010/engine/200/200" xmlns:ddl300="http://schemas.microsoft.com/analysisservices/2011/engine/300" xmlns:ddl300_300="http://schemas.microsoft.com/analysisservices/2011/engine/300/300" xmlns:ddl400="http://schemas.microsoft.com/analysisservices/2012/engine/400" xmlns:ddl400_400="http://schemas.microsoft.com/analysisservices/2012/engine/400/400" xmlns:ddl500="http://schemas.microsoft.com/analysisservices/2013/engine/500" xmlns:ddl500_500="http://schemas.microsoft.com/analysisservices/2013/engine/500/500" xmlns:dwd="http://schemas.microsoft.com/DataWarehouse/Designer/1.0" dwd:design-time-name="0a9a6388-abf2-4d0d-aade-b0168e75ee06" xmlns="http://schemas.microsoft.com/analysisservices/2003/engine">
+  <ID>SVA 1</ID>
+  <Name>SVA 1</Name>
+  <CreatedTimestamp>0001-01-01T00:00:00Z</CreatedTimestamp>
+  <LastSchemaUpdate>0001-01-01T00:00:00Z</LastSchemaUpdate>
+  <Annotations>
+    <Annotation>
+      <Name>http://schemas.microsoft.com/DataWarehouse/Designer/1.0:DiagramLayout</Name>
+    </Annotation>
+    <Annotation>
+      <Name>http://schemas.microsoft.com/DataWarehouse/Designer/1.0:ShowFriendlyNames</Name>
+      <Value>true</Value>
+    </Annotation>
+    <Annotation>
+      <Name>http://schemas.microsoft.com/DataWarehouse/Designer/1.0:ShowRelationshipNames</Name>
+      <Value>false</Value>
+    </Annotation>
+    <Annotation>
+      <Name>http://schemas.microsoft.com/DataWarehouse/Designer/1.0:UseDiagramDefaultLayout</Name>
+      <Value>true</Value>
+    </Annotation>
+    <Annotation>
+      <Name>http://schemas.microsoft.com/DataWarehouse/Designer/1.0:DiagramViewPortLeft</Name>
+      <Value>0</Value>
+    </Annotation>
+    <Annotation>
+      <Name>http://schemas.microsoft.com/DataWarehouse/Designer/1.0:DiagramViewPortTop</Name>
+      <Value>0</Value>
+    </Annotation>
+    <Annotation>
+      <Name>http://schemas.microsoft.com/DataWarehouse/Designer/1.0:DiagramBoundingLeft</Name>
+      <Value>0</Value>
+    </Annotation>
+    <Annotation>
+      <Name>http://schemas.microsoft.com/DataWarehouse/Designer/1.0:DiagramBoundingTop</Name>
+      <Value>0</Value>
+    </Annotation>
+    <Annotation>
+      <Name>http://schemas.microsoft.com/DataWarehouse/Designer/1.0:DiagramZoom</Name>
+      <Value>100</Value>
+    </Annotation>
+  </Annotations>
+  <LastProcessed>0001-01-01T00:00:00Z</LastProcessed>
+  <State>Unprocessed</State>
+  <Dimensions>
+    <Dimension dwd:design-time-name="0ad00f68-e233-4794-b5b1-76f8f71712f5">
+      <ID>Vacation dic</ID>
+      <Name>Vacation dic</Name>
+      <DimensionID>Vacation dic</DimensionID>
+      <Attributes>
+        <Attribute dwd:design-time-name="78469df5-df62-4dfb-ad18-11ebdf19ce66">
+          <AttributeID>Vacation Type</AttributeID>
+        </Attribute>
+      </Attributes>
+    </Dimension>
+    <Dimension dwd:design-time-name="10a68cf0-4ae6-4328-bc4a-b3be00636004">
+      <ID>Personal</ID>
+      <Name>Personal</Name>
+      <DimensionID>Personal</DimensionID>
+      <Attributes>
+        <Attribute dwd:design-time-name="fb0b751c-5a7e-4515-851b-775d585ae9ab">
+          <AttributeID>TN</AttributeID>
+        </Attribute>
+      </Attributes>
+    </Dimension>
+  </Dimensions>
+  <MeasureGroups>
+    <MeasureGroup dwd:design-time-name="59854487-723d-47b6-8b84-4c2ead99c298">
+      <ID>Vacation</ID>
+      <Name>Vacation</Name>
+      <CreatedTimestamp>0001-01-01T00:00:00Z</CreatedTimestamp>
+      <LastSchemaUpdate>0001-01-01T00:00:00Z</LastSchemaUpdate>
+      <LastProcessed>0001-01-01T00:00:00Z</LastProcessed>
+      <State>Unprocessed</State>
+      <Measures>
+        <Measure dwd:design-time-name="a7ff116e-13d3-4db8-b17f-82695c183f58">
+          <ID>Ndays</ID>
+          <Name>Ndays</Name>
+          <Source dwd:design-time-name="4231dc27-382d-4e2b-8e33-c3de7b4db288">
+            <DataType>Integer</DataType>
+            <Source xsi:type="ColumnBinding" dwd:design-time-name="aaad0194-95a4-477c-a8be-43711c51a638">
+              <TableID>dbo_vacation</TableID>
+              <ColumnID>Ndays</ColumnID>
+            </Source>
+          </Source>
+        </Measure>
+        <Measure dwd:design-time-name="19e14c6f-5af7-4df9-9400-da1bffedbef9">
+          <ID>Число Vacation</ID>
+          <Name>Число Vacation</Name>
+          <AggregateFunction>Count</AggregateFunction>
+          <Source dwd:design-time-name="a5838dca-79cc-439d-b2ba-d6dc126fabf9">
+            <DataType>Integer</DataType>
+            <DataSize>4</DataSize>
+            <Source xsi:type="RowBinding" dwd:design-time-name="18dc791a-f52c-4d49-8e3b-ca29dbd0b226">
+              <TableID>dbo_vacation</TableID>
+            </Source>
+          </Source>
+        </Measure>
+      </Measures>
+      <StorageMode>Molap</StorageMode>
+      <ProcessingMode>Regular</ProcessingMode>
+      <Dimensions>
+        <Dimension xsi:type="RegularMeasureGroupDimension" dwd:design-time-name="f9f9e4ff-7d42-48ea-a60d-d0d0207647d1">
+          <CubeDimensionID>Vacation dic</CubeDimensionID>
+          <Attributes>
+            <Attribute dwd:design-time-name="74dffd16-6326-4627-97ab-668b9a9abf2e">
+              <AttributeID>Vacation Type</AttributeID>
+              <KeyColumns>
+                <KeyColumn dwd:design-time-name="1128bb37-e06b-4894-97c9-18ae4a83eeb8">
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding" dwd:design-time-name="c0dae85a-db5e-43e9-be99-839521038abe">
+                    <TableID>dbo_vacation</TableID>
+                    <ColumnID>Vacation_type</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension" dwd:design-time-name="88585458-ee23-47cd-96d0-39dd0b582adc">
+          <CubeDimensionID>Personal</CubeDimensionID>
+          <Attributes>
+            <Attribute dwd:design-time-name="255f357d-af30-4245-b382-3b37f1770a2b">
+              <AttributeID>TN</AttributeID>
+              <KeyColumns>
+                <KeyColumn dwd:design-time-name="f42510ad-9ea0-42e6-b979-f20c35e4c011">
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding" dwd:design-time-name="c365f63a-8817-4830-9c68-ba7e29edd405">
+                    <TableID>dbo_vacation</TableID>
+                    <ColumnID>TN</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+      </Dimensions>
+      <Partitions />
+    </MeasureGroup>
+  </MeasureGroups>
+  <Source dwd:design-time-name="a24fc2aa-aab1-4194-be6c-cd32a377a0e1">
+    <DataSourceViewID>SVA 1</DataSourceViewID>
+  </Source>
+</Cube>
